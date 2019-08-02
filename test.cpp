@@ -56,7 +56,7 @@ int main(int argc, const char* argv[])
     Mat cen;
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
    // std::vector<Vec4i> hi;
-	double points_len;
+	double points_len; //これなに
 	image1 = imread("./ans.jpg");
     if(image1.empty()==true){
         return -1;
@@ -73,18 +73,22 @@ int main(int argc, const char* argv[])
     GaussianBlur(img3,img3,Size(3,3),10);
     threshold(img3,img3,1.5,255,THRESH_BINARY_INV );
     medianBlur(img3,img3,7);
-    int n=connectedComponentsWithStats(img3,img3,stats,cen,8,CV_32S);
+
+int n=connectedComponentsWithStats(img3,img3,stats,cen,4,CV_32S);  
+//ノイズ除去
+
     std::vector<Vec3b> colors(n);
-    colors[0]=Vec3b((rand()&255),(rand()&255),(rand() &255));
+    colors[0]=Vec3b(0,0,0);
     for(int i = 1;i < n;i++){
         colors[i]=Vec3b((rand()&255),(rand()&255),(rand() &255));
     }
 
     Mat Dst(img3.size(),CV_8UC1);//ラベリング結果の出力。
 
+    
     for (size_t i = 0; i < Dst.rows; i++)
     {
-        int *lb = labe.ptr<int>(i);
+            int *lb = labe.ptr<int>(i);
             Vec3b *pix = Dst.ptr<Vec3b>(i);
             for (size_t j = 0; j < Dst.cols; j++)
             {
@@ -95,14 +99,15 @@ int main(int argc, const char* argv[])
     //ROIの設定まで書く
     //imshow("image",img3);
 
-    /*        
+    ///
     std::vector<Vec4i> hierarchy;
 //	findContours(img3, imgs_points, hierarchy,CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);//輪郭検出
 	int size = imgs_points.size();
 
-    std :: cout << imgs_points.size() << std::endl;
 
+    std :: cout << imgs_points.size() << std::endl;
     for (size_t i = 0; i < imgs_points.size(); i++)
+
     {
         Point MaxP = max(imgs_points.at(i));
         Point MinP = min(imgs_points.at(i));
@@ -112,7 +117,7 @@ int main(int argc, const char* argv[])
         rectangle(img3,rect,Scalar(200,0,0),-1,CV_AA);
     }
 
-    */
+    //*/
 
     imshow("image2",img3);
     waitKey();
