@@ -83,7 +83,7 @@ int main(int argc, const char* argv[])
 
     ///ラベリング実行size_
 
-    int nlabel = connectedComponents(labes,labelImaage,8); //int nlabelがラベル数になる。
+    int nlabel = connectedComponents(labes,labelImaage,4); //int nlabelがラベル数になる。
 
     std::cout << nlabel << std :: endl;
     std::vector<Vec3b>colors_1(nlabel);
@@ -105,18 +105,15 @@ int main(int argc, const char* argv[])
         
     }
     
+    Mat binarys ;
+  
+    threshold(output,output,120,255,THRESH_BINARY_INV );
+    cvtColor(output,output,CV_BGR2GRAY);
+    binarys = output;
+    imshow("a",output);
+    waitKey();
+    std :: vector<std::vector<Point>> contuors;
 
-    namedWindow("source",WINDOW_AUTOSIZE);
-    imshow("source",img2);
-
-    namedWindow("output",WINDOW_AUTOSIZE);
-    imshow("output",output);
-
-
-
-
-    //imshow("image2",img3);
-    //waitKey();
 
     return 0;
 }
