@@ -51,7 +51,7 @@ Point min(std::vector<Point> P){
 int main(int argc, const char* argv[]) 
 {
     Mat  image1,img2,img3,img4;
-    Mat labe ;
+   // Mat labe ;
     Mat stats;
     Mat cen;
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
@@ -75,23 +75,48 @@ int main(int argc, const char* argv[])
     medianBlur(img3,img3,7);
 
     //int n=connectedComponentsWithStats(img3,img3,stats,cen,4,CV_32S);  
-//ノイズ除去
+    //ノイズ除去
+
 
     Mat labes = img3 ;//ラベリング対象画像の生成
-    Mat labelImaage (labe.size(),CV_32S); //ラベリング用画像の生成
+    Mat labelImaage (labes.size(),CV_32S); //ラベリング用画像の生成
 
-    ///ラベリング実行
+    ///ラベリング実行size_
 
-    int nlabel = connectedComponents(labe,labelImaage,8); //int nlabelがラベル数になる。
+    int nlabel = connectedComponents(labes,labelImaage,8); //int nlabelがラベル数になる。
 
     std::cout << nlabel << std :: endl;
+    std::vector<Vec3b>colors_1(nlabel);
+    for (size_t lacont = 0; lacont < nlabel; lacont++)
+    {
+        colors_1[lacont] =   Vec3b((rand()&255),(rand()&255),(rand()&255));
+    }
 
+    Mat output (img3.size(),CV_8UC3);//ラベリング結果出力
+
+    for (int i = 0; i < output.rows; i++)
+    {
+        for (int j = 0; j < output.cols; j++)
+        {
+            int labels = labelImaage.at<int>(i,j);
+            Vec3b &pixel = output.at<Vec3b>(i,j);
+            pixel = colors_1[labels];
+        }
+        
+    }
     
 
+    namedWindow("source",WINDOW_AUTOSIZE);
+    imshow("source",img2);
+
+    namedWindow("output",WINDOW_AUTOSIZE);
+    imshow("output",output);
 
 
-    imshow("image2",img3);
-    waitKey();
+
+
+    //imshow("image2",img3);
+    //waitKey();
 
     return 0;
 }
