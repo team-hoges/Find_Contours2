@@ -22,7 +22,7 @@ Point max(std::vector<Point> P){
     for (size_t i = 0; i < P.size(); i++)
     {
         if(max_x < P.at(i).x){
-            max_x=P.at(0).x;
+            max_x=P.at(i).x;
         }
 
         if(max_y < P.at(i).y){
@@ -39,7 +39,7 @@ Point min(std::vector<Point> P){
     for (size_t i = 0; i < P.size(); i++)
     {
         if(min_x > P.at(i).x){
-            min_x=P.at(0).x;
+            min_x=P.at(i).x;
         }
 
         if(min_y > P.at(i).y){
@@ -48,15 +48,17 @@ Point min(std::vector<Point> P){
     }
     return Point(min_x,min_y);
 }
+
 int main(int argc, const char* argv[]) 
 {
     Mat  image1,img2,img3,img4;
+    Mat binarys ;
    // Mat labe ;
     Mat stats;
     Mat cen;
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
    // std::vector<Vec4i> hi;
-	double points_len; //これなに
+	//double points_len; //これなに
 	image1 = imread("./ans.jpg");
     if(image1.empty()==true){
         return -1;
@@ -79,15 +81,16 @@ int main(int argc, const char* argv[])
 
 
     Mat labes = img3 ;//ラベリング対象画像の生成
+    Mat find  = img3;
     Mat labelImaage (labes.size(),CV_32S); //ラベリング用画像の生成
 
     ///ラベリング実行size_
-
+    
     int nlabel = connectedComponents(labes,labelImaage,4); //int nlabelがラベル数になる。
 
     std::cout << nlabel << std :: endl;
     std::vector<Vec3b>colors_1(nlabel);
-    for (size_t lacont = 0; lacont < nlabel; lacont++)
+    for (int lacont = 0; lacont < nlabel; lacont++)
     {
         colors_1[lacont] =   Vec3b((rand()&255),(rand()&255),(rand()&255));
     }
@@ -105,15 +108,35 @@ int main(int argc, const char* argv[])
         
     }
     
-    Mat binarys ;
-  
-    threshold(output,output,120,255,THRESH_BINARY_INV );
+   
     cvtColor(output,output,CV_BGR2GRAY);
-    binarys = output;
-    imshow("a",output);
-    waitKey();
+    threshold(output,output,120,255,THRESH_BINARY_INV );
+   
+
+    binarys = img3;
+    //imshow("a",output);
+    //waitKey();
     std :: vector<std::vector<Point>> contuors;
+    std :: vector <Vec4i> he;
+    
+    findContours(binarys,contuors,he,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_SIMPLE);
+    Point MinP;
+    Point MaxP;
+    for (int i = 0; i < contuors.size(); i++)
+    {
+        MinP = min(contuors.at(i));
+        MaxP = max(contuors.at(i));
 
+        Rect rect(MinP,MaxP);
 
+        rectangle( image1, rect, Scalar(0,255,0),2,8);
+    }
+    
+    std::cout << contuors.size()  << std :: endl;
+    
+    
+    cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
+    cv::imshow("Source", output);
+    waitKey();
     return 0;
 }
