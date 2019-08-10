@@ -137,9 +137,19 @@ int main(int argc, const char* argv[])
     
     std::cout << contuors.size()  << std :: endl;
     
+
+    for (auto cont_s = contuors.begin(); cont_s != contuors.end(); cont_s++)
+    {
+        std ::vector<Point>  aprox;
+        convexHull( *contuors,aprox);
+
+    }
+    
     
     cv::namedWindow("Source", cv::WINDOW_NORMAL);
     cv::imshow("Source", image1);
     waitKey();
+
+
     return 0;
 }
