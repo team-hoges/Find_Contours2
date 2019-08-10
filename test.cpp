@@ -113,7 +113,7 @@ int main(int argc, const char* argv[])
     cvtColor(output,output,CV_BGR2GRAY);
     threshold(output,output,20,255,THRESH_BINARY );
    
-    cv::namedWindow("f", cv::WINDOW_AUTOSIZE );
+    cv::namedWindow("f", cv::WINDOW_NORMAL );
     cv::imshow("f", output);
    
     binarys = output;
@@ -122,7 +122,7 @@ int main(int argc, const char* argv[])
     std :: vector<std::vector<Point>> contuors;
     std :: vector <Vec4i> he;
     
-    findContours(binarys,contuors,he,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_TC89_L1);
+    findContours(binarys,contuors,he,CV_RETR_TREE ,CHAIN_APPROX_NONE );
     Point MinP;
     Point MaxP;
     for (int i = 0; i < contuors.size(); i++)
@@ -138,7 +138,7 @@ int main(int argc, const char* argv[])
     std::cout << contuors.size()  << std :: endl;
     
     
-    cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
+    cv::namedWindow("Source", cv::WINDOW_NORMAL);
     cv::imshow("Source", image1);
     waitKey();
     return 0;
