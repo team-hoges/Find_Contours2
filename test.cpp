@@ -86,11 +86,12 @@ int main(int argc, const char* argv[])
 
     ///ラベリング実行size_
     
-    int nlabel = connectedComponents(labes,labelImaage,4); //int nlabelがラベル数になる。
+    int nlabel = connectedComponents(labes,labelImaage,8); //int nlabelがラベル数になる。
 
     std::cout << nlabel << std :: endl;
     std::vector<Vec3b>colors_1(nlabel);
-    for (int lacont = 0; lacont < nlabel; lacont++)
+        colors_1[0] =   Vec3b(0,0,0);
+    for (int lacont = 1; lacont < nlabel; lacont++)
     {
         colors_1[lacont] =   Vec3b((rand()&255),(rand()&255),(rand()&255));
     }
@@ -108,18 +109,20 @@ int main(int argc, const char* argv[])
         
     }
     
-   
+  
     cvtColor(output,output,CV_BGR2GRAY);
-    threshold(output,output,120,255,THRESH_BINARY_INV );
+    threshold(output,output,20,255,THRESH_BINARY );
    
-
-    binarys = img3;
+    cv::namedWindow("f", cv::WINDOW_AUTOSIZE );
+    cv::imshow("f", output);
+   
+    binarys = output;
     //imshow("a",output);
     //waitKey();
     std :: vector<std::vector<Point>> contuors;
     std :: vector <Vec4i> he;
     
-    findContours(binarys,contuors,he,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_SIMPLE);
+    findContours(binarys,contuors,he,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_TC89_L1);
     Point MinP;
     Point MaxP;
     for (int i = 0; i < contuors.size(); i++)
@@ -136,7 +139,7 @@ int main(int argc, const char* argv[])
     
     
     cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
-    cv::imshow("Source", output);
+    cv::imshow("Source", image1);
     waitKey();
     return 0;
 }
