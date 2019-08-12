@@ -109,16 +109,19 @@ int main(int argc, const char* argv[])
         
     }
     
-  
+    Mat sabun;
     cvtColor(output,output,CV_BGR2GRAY);
     threshold(output,output,20,255,THRESH_BINARY );
+    morphologyEx(output, output,MORPH_OPEN, Mat(), Point(-1, -1), 1);
    
-    cv::namedWindow("f", cv::WINDOW_AUTOSIZE );
-    cv::imshow("f", output);
-   
-    binarys = output;
+    
+    
+
+
+
     //imshow("a",output);
     //waitKey();
+    /*
     std :: vector<std::vector<Point>> contuors;
     std :: vector <Vec4i> he;
     
@@ -142,4 +145,10 @@ int main(int argc, const char* argv[])
     cv::imshow("Source", image1);
     waitKey();
     return 0;
+    */
+
+    cv::namedWindow("f", WINDOW_AUTOSIZE );
+    cv::imshow("f", output);
+    waitKey();
+ return 0;
 }
