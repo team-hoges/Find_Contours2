@@ -138,8 +138,8 @@ int main(int argc, const char* argv[])
     std::cout << contuors.size()  << std :: endl;
     
     
-    //cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
-  //  cv::imshow("Source", image1);
+    cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
+    cv::imshow("Source", image1);
     waitKey();
     return 0;
 }
