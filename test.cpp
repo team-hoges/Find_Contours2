@@ -121,7 +121,7 @@ int main(int argc, const char* argv[])
     //cvtColor(img3,output,CV_BGR2GRAY);
     //threshold(output,output,20,255,THRESH_BINARY );
     morphologyEx(output, output,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
-    morphologyEx(output, output,MORPH_DILATE, Mat(), Point(-1, -1), 1);
+  //  morphologyEx(output, output,MORPH_DILATE, Mat(), Point(-1, -1), 1);
    
     //imshow("a",output);
     //waitKey();
@@ -132,7 +132,7 @@ int main(int argc, const char* argv[])
     imshow("a",output);
     waitKey();
 
-    findContours(output,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE );
+    findContours(output,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);
  
  //輪郭四角表示部
  /*
@@ -159,22 +159,25 @@ int main(int argc, const char* argv[])
         area = contourArea(contuors.at(i));
         printf("%f\n",area);
         if(area > 1000){
-            contours_subset.push_back(contuors.at(i));//面積情報でわける
+            contours_subset.push_back(contuors.at(i));//面積が小さい群を全部消し去って抽出する。
         }
     }
     
     
     Mat mask_data = Mat::zeros(image1.rows, image1.cols, CV_8UC3);
+    drawContours(mask_data,contours_subset,-1,Scalar(255,255,255),-1);//ここでマスク処理を行う
+  
+    
+    //cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
+    //cv::imshow("Source", mask_data);//これを使う
+    //waitKey();
+    
+    Mat sure_bg;
+     Mat kernel(3, 3, CV_8U, cv::Scalar(1));
+     morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
     
 
-    drawContours(mask_data,contours_subset,-1,Scalar(255,255,255),-1);
-  
 
-
-    cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
-    cv::imshow("Source", mask_data);
-    waitKey();
-        
 
    // cv::namedWindow("f", WINDOW_AUTOSIZE );
    // cv::imshow("f", sabun_bg);
