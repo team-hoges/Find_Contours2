@@ -173,14 +173,23 @@ int main(int argc, const char* argv[])
     //waitKey();
     
     Mat sure_bg;
-     Mat kernel(3, 3, CV_8U, cv::Scalar(1));
-     morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
+    Mat kernel(3, 3, CV_8U, cv::Scalar(1));
+//     morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
+    dilate(mask_data,sure_bg,kernel,Point(-1,-1),2);
     
+//cv::namedWindow("f", WINDOW_AUTOSIZE );
+    cv::imshow("f", sure_bg);
+    waitKey();
+
+    Mat dist_transform;
+    distanceTransform(mask_data,dist_transform,CV_DIST_L2,5);
+   
+    namedWindow("dis",WINDOW_AUTOSIZE);
+    imshow("dist",dist_transform);
 
 
 
-   // cv::namedWindow("f", WINDOW_AUTOSIZE );
-   // cv::imshow("f", sabun_bg);
-    //waitKey();
+ 
+ 
  return 0;
 }
