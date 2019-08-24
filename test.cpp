@@ -129,8 +129,8 @@ int main(int argc, const char* argv[])
     std :: vector<std::vector<Point>> contuors;
     std :: vector <Vec4i> he;
     
-    imshow("a",output);
-    waitKey();
+    //imshow("a",output);
+    //waitKey();
 
     findContours(output,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);
  
@@ -168,28 +168,28 @@ int main(int argc, const char* argv[])
     drawContours(mask_data,contours_subset,-1,Scalar(255,255,255),-1);//ここでマスク処理を行う
   
     
-    //cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
-    //cv::imshow("Source", mask_data);//これを使う
-    //waitKey();
+    cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
+    cv::imshow("Source", mask_data);//これを使う
+    waitKey();
     
     Mat sure_bg;
     Mat kernel(3, 3, CV_8U, cv::Scalar(1));
 //     morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
-    dilate(mask_data,sure_bg,kernel,Point(-1,-1),2);
+    dilate(mask_data,sure_bg,kernel,Point(-1,-1),2);//背景領域の抽出
     
-//cv::namedWindow("f", WINDOW_AUTOSIZE );
-    cv::imshow("f", sure_bg);
+    namedWindow("f", WINDOW_AUTOSIZE );
+    imshow("f", sure_bg);
     waitKey();
 
     Mat dist_transform;
-    distanceTransform(mask_data,dist_transform,CV_DIST_L2,5);
-   
-    namedWindow("dis",WINDOW_AUTOSIZE);
-    imshow("dist",dist_transform);
+    Mat sub_mask;
+    cvtColor(mask_data,sub_mask,CV_BGR2GRAY);
 
-
-
- 
+    distanceTransform(sub_mask,dist_transform,CV_DIST_L2,5);
+    imshow("dis",dist_transform);
+    waitKey();
+    
+git 
  
  return 0;
 }
