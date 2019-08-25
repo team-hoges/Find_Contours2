@@ -189,7 +189,20 @@ int main(int argc, const char* argv[])
     imshow("dis",dist_transform);
     waitKey();
     
-git 
+    Mat surefg;
+    double f1,f2;
+
+    
+	cv::Point minLoc, maxLoc;
+    
+	cv::minMaxLoc(dist_transform, &minVal, &maxVal, &minLoc, &maxLoc);
+	cv::threshold(dist_transform, sure_fg, 0.2*maxVal, 255, 0);
  
+    dist_transform = dist_transform / maxLoc;
+
+    imshow("hoge",dist_transform);
+    waitKey();
+
+
  return 0;
 }
