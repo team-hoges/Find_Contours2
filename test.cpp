@@ -14,6 +14,7 @@
 #include<strstream>
 
 using namespace cv;
+using namespace 
 
 //todo テスト用コード　あまりにひどいので　あとでリファクタリングする。
 
@@ -224,13 +225,13 @@ int main(int argc, const char* argv[])
 
     surefg.convertTo(surefg,CV_32SC1,1.0);
 
-
     //前景ラベリング
 
     int comp;
-    
+    std::vector<std::vector<cv::Point> > cont;
+	std::vector<cv::Vec4i> hierarchy;
     surefg.convertTo(surefg,CV_32SC1);
-    findContours(surefg,contuors,he,RETR_CCOMP,CHAIN_APPROX_SIMPLE);//前景領域の輪郭を取る
+    findContours(surefg,cont,hierarchy,RETR_CCOMP,CHAIN_APPROX_SIMPLE);//前景領域の輪郭を取る
 
     if(contuors.empty() ){
         return -1;
@@ -242,7 +243,7 @@ int main(int argc, const char* argv[])
 
     for (comp =0; index = he[index][0];  comp)
     {
-        drawContours(Marker,contuors,index,Scalar::all(comp+1),-1,8,he,INT_MAX);
+        drawContours(Marker,cont,index,Scalar::all(comp+1),-1,8,he,INT_MAX);
         Marker =Marker+1;
 
     }
