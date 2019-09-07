@@ -57,6 +57,8 @@ int main(int argc, const char* argv[])
    // Mat labe ;
     Mat stats;
     Mat cen;
+    double minVal;
+    double maxVal;
     double area;//塗りつぶし範囲卍
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
    // std::vector<Vec4i> hi;
@@ -132,7 +134,7 @@ int main(int argc, const char* argv[])
     //imshow("a",output);
     //waitKey();
 
-    findContours(output,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);
+    findContours(output,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭検出
  
  //輪郭四角表示部
  /*
@@ -166,27 +168,34 @@ int main(int argc, const char* argv[])
     
     Mat mask_data = Mat::zeros(image1.rows, image1.cols, CV_8UC3);
     drawContours(mask_data,contours_subset,-1,Scalar(255,255,255),-1);//ここでマスク処理を行う
-  
+  /////////////////////////////////////////////////////////////////////////////////////////////////
     
-    cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
+    //cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
     cv::imshow("Source", mask_data);//これを使う
     waitKey();
     
     Mat sure_bg;
     Mat kernel(3, 3, CV_8U, cv::Scalar(1));
-//     morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
+    
+    morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
     dilate(mask_data,sure_bg,kernel,Point(-1,-1),2);//背景領域の抽出
     
-    namedWindow("f", WINDOW_AUTOSIZE );
-    imshow("f", sure_bg);
-    waitKey();
+    //namedWindow("f", WINDOW_AUTOSIZE );
+    //imshow("f", sure_bg);
+   // waitKey();
 
     Mat dist_transform;
+    Mat dist_transform2;
+    Mat dist_output;
     Mat sub_mask;
-    cvtColor(mask_data,sub_mask,CV_BGR2GRAY);
 
+    //前景領域  
+    cvtColor(mask_data,sub_mask,CV_BGR2GRAY);
     distanceTransform(sub_mask,dist_transform,CV_DIST_L2,5);
-    imshow("dis",dist_transform);
+    
+    //cvtColor(dist_transform,dist_transform2,CV_BGR2GRAY);
+    //distanceTransform(dist_transform2,output,CV_DIST_L2,5 );
+    imshow("dis",sure_bg);
     waitKey();
     
     Mat surefg;
@@ -195,13 +204,13 @@ int main(int argc, const char* argv[])
     
 	cv::Point minLoc, maxLoc;
     
-	cv::minMaxLoc(dist_transform, &minVal, &maxVal, &minLoc, &maxLoc);
-	cv::threshold(dist_transform, sure_fg, 0.2*maxVal, 255, 0);
+	minMaxLoc(dist_transform, &minVal, &maxVal, &minLoc, &maxLoc);
+	threshold(dist_transform, sure_fg, 0.2*maxVal, 255, 0);
  
-    dist_transform = dist_transform / maxLoc;
+ //   dist_transform = dist_transform / maxLoc;
 
-    imshow("hoge",dist_transform);
-    waitKey();
+    //imshow("hoge2",dist_transform);
+    //waitKey();
 
 
  return 0;
