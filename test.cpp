@@ -15,6 +15,7 @@
 
 using namespace cv;
 
+//todo テスト用コード　あまりにひどいので　あとでリファクタリングする。
 
 Point max(std::vector<Point> P){
     double max_x = P.at(0).x;
@@ -205,12 +206,51 @@ int main(int argc, const char* argv[])
 	cv::Point minLoc, maxLoc;
     
 	minMaxLoc(dist_transform, &minVal, &maxVal, &minLoc, &maxLoc);
-	threshold(dist_transform, sure_fg, 0.2*maxVal, 255, 0);
+	threshold(dist_transform, surefg, 0.2*maxVal, 255, 0);
  
- //   dist_transform = dist_transform / maxLoc;
+    dist_transform = dist_transform / maxVal;
 
-    //imshow("hoge2",dist_transform);
-    //waitKey();
+    imshow("hoge2",dist_transform);
+    waitKey();
+
+
+    Mat unknow;
+    Mat sure_fg_uc1;
+
+    surefg.convertTo(sure_fg_uc1,CV_8UC1);
+    subtract(sure_bg,sure_fg_uc1,unknow);
+    imshow("unknow",unknow);
+    waitKey();
+
+    surefg.convertTo(surefg,CV_32SC1,1.0);
+
+
+    //前景ラベリング
+
+    int comp;
+    
+    surefg.convertTo(surefg,CV_32SC1);
+    findContours(surefg,contuors,he,RETR_CCOMP,CHAIN_APPROX_SIMPLE);//前景領域の輪郭を取る
+
+    if(contuors.empty() ){
+        return -1;
+    }
+
+    Mat Marker = Mat::zeros(surefg.rows,surefg.cols,CV_32SC1);
+
+    int index;
+
+    for (comp =0; index = he[index][0];  comp)
+    {
+        drawContours(Marker,contuors,index,Scalar::all(comp+1),-1,8,he,INT_MAX);
+        Marker =Marker+1;
+
+    }
+    
+
+
+    imshow("markers",Marker);
+    waitKey();
 
 
  return 0;
