@@ -14,7 +14,7 @@
 #include<strstream>
 
 using namespace cv;
-using namespace 
+
 
 //todo テスト用コード　あまりにひどいので　あとでリファクタリングする。
 
@@ -56,12 +56,13 @@ int main(int argc, const char* argv[])
 {
     Mat  image1,img2,img3,img4;
     Mat binarys ;
+    int index=0;
    // Mat labe ;
     Mat stats;
     Mat cen;
-    double minVal;
-    double maxVal;
-    double area;//塗りつぶし範囲卍
+    double minVal=0;
+    double maxVal=0;
+    double area=0;//塗りつぶし範囲卍
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
    // std::vector<Vec4i> hi;
 	//double points_len; //これなに
@@ -76,7 +77,7 @@ int main(int argc, const char* argv[])
     //img2 = image1;
     //img4 = image1;
     cvtColor(image1,img2,CV_BGR2GRAY);
-    img4 = img2;
+    img4 = img2.clone();
     img2 = ~img2;
     threshold(img2,img3,1.20,255,THRESH_BINARY_INV );
     GaussianBlur(img3,img3,Size(3,3),10);
@@ -88,8 +89,8 @@ int main(int argc, const char* argv[])
     
   //  imshow("image",img3);
     //waitKey();
-    Mat labes = img3 ;//ラベリング対象画像の生成
-    Mat find  = img3;
+    Mat labes = img3.clone() ;//ラベリング対象画像の生成
+    Mat find  = img3.clone();
    // Mat labelImaage (labes.size(),CV_32S); //ラベリング用画像の生成
 
     ///ラベリング実行size_
@@ -121,11 +122,11 @@ int main(int argc, const char* argv[])
 
     
    // Mat sabun_bg;//膨張後差分
-    output = img3;
+    output = img3.clone();
     //cvtColor(img3,output,CV_BGR2GRAY);
     //threshold(output,output,20,255,THRESH_BINARY );
-    morphologyEx(output, output,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
-  //  morphologyEx(output, output,MORPH_DILATE, Mat(), Point(-1, -1), 1);
+    //morphologyEx(output, output,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
+   //  morphologyEx(output, output,MORPH_DILATE, Mat(), Point(-1, -1), 1);
    
     //imshow("a",output);
     //waitKey();
@@ -173,7 +174,7 @@ int main(int argc, const char* argv[])
   /////////////////////////////////////////////////////////////////////////////////////////////////
     
     //cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
-    cv::imshow("Source", mask_data);//これを使う
+    cv::imshow("mask_data", mask_data);//これを使う
     waitKey();
     
     Mat sure_bg;
@@ -183,8 +184,8 @@ int main(int argc, const char* argv[])
     dilate(mask_data,sure_bg,kernel,Point(-1,-1),2);//背景領域の抽出
     
     //namedWindow("f", WINDOW_AUTOSIZE );
-    //imshow("f", sure_bg);
-   // waitKey();
+    imshow("前", sure_bg);
+    waitKey();
 
     Mat dist_transform;
     Mat dist_transform2;
@@ -193,11 +194,11 @@ int main(int argc, const char* argv[])
 
     //前景領域  
     cvtColor(mask_data,sub_mask,CV_BGR2GRAY);
-    distanceTransform(sub_mask,dist_transform,CV_DIST_L2,5);
+    distanceTransform(sub_mask,dist_transform,CV_DIST_L1,5);
     
     //cvtColor(dist_transform,dist_transform2,CV_BGR2GRAY);
     //distanceTransform(dist_transform2,output,CV_DIST_L2,5 );
-    imshow("dis",sure_bg);
+    imshow("dis",dist_transform);
     waitKey();
     
     Mat surefg;
@@ -207,19 +208,24 @@ int main(int argc, const char* argv[])
 	cv::Point minLoc, maxLoc;
     
 	minMaxLoc(dist_transform, &minVal, &maxVal, &minLoc, &maxLoc);
-	threshold(dist_transform, surefg, 0.2*maxVal, 255, 0);
+	threshold(dist_transform, surefg, 0.00001*maxVal, 255, 0);
  
     dist_transform = dist_transform / maxVal;
 
     imshow("hoge2",dist_transform);
     waitKey();
 
+    imshow("surefg",surefg);
+    waitKey();
+
 
     Mat unknow;
     Mat sure_fg_uc1;
-
+    Mat sure_bg_uc1;
     surefg.convertTo(sure_fg_uc1,CV_8UC1);
-    subtract(sure_bg,sure_fg_uc1,unknow);
+    //sure_bg.convertTo(sure_bg_uc1,CV_8UC1);
+    cvtColor(sure_bg,sure_bg_uc1,COLOR_BGR2GRAY);
+    subtract(sure_bg_uc1,sure_fg_uc1,unknow);
     imshow("unknow",unknow);
     waitKey();
 
@@ -230,29 +236,71 @@ int main(int argc, const char* argv[])
     int comp;
     std::vector<std::vector<cv::Point> > cont;
 	std::vector<cv::Vec4i> hierarchy;
-    surefg.convertTo(surefg,CV_32SC1);
+    surefg.convertTo(surefg,CV_32SC1,1.0);
     findContours(surefg,cont,hierarchy,RETR_CCOMP,CHAIN_APPROX_SIMPLE);//前景領域の輪郭を取る
 
     if(contuors.empty() ){
+       printf("エラー");
         return -1;
     }
 
     Mat Marker = Mat::zeros(surefg.rows,surefg.cols,CV_32SC1);
 
-    int index;
 
-    for (comp =0; index = he[index][0];  comp)
-    {
-        drawContours(Marker,cont,index,Scalar::all(comp+1),-1,8,he,INT_MAX);
-        Marker =Marker+1;
+    for (index=0,comp =0; index >=0 ;index = hierarchy[index][0], comp++)
+        drawContours(Marker,cont,index,Scalar::all(comp+1),-1,8,hierarchy,INT_MAX);
 
-    }
-    
+    Marker=Marker+1;
 
 
-    imshow("markers",Marker);
+
+     for(int i=0; i<Marker.rows; i++){
+		for(int j=0; j<Marker.cols; j++){
+			unsigned char &v = unknow.at<unsigned char>(i, j);
+			if(v==255){
+				Marker.at<int>(i, j) = 0;
+			}
+		}
+	}
+    watershed(image1,Marker);
+
+
+    //imshow("mark2",Marker);
+    //waitKey();
+
+    cv::Mat wshed(Marker.size(), CV_8UC3);
+	std::vector<cv::Vec3b> colorTab;
+	for(int i = 0; i < comp; i++ )
+	{
+		int b = cv::theRNG().uniform(0, 255);
+	 	int g = cv::theRNG().uniform(0, 255);
+		int r = cv::theRNG().uniform(0, 255);
+
+		colorTab.push_back(cv::Vec3b((uchar)b, (uchar)g, (uchar)r));
+	}
+
+	
+	for(int i = 0; i < Marker.rows; i++ ){
+		for(int j = 0; j < Marker.cols; j++ )
+		{
+			int index = Marker.at<int>(i,j);
+			if( index == -1 )
+				wshed.at<cv::Vec3b>(i,j) = cv::Vec3b(255,255,255);
+			else if( index <= 0 || index > comp )
+				wshed.at<cv::Vec3b>(i,j) = cv::Vec3b(0,0,0);
+			else
+				wshed.at<cv::Vec3b>(i,j) = colorTab[index - 1];
+		}
+	}
+
+	cv::Mat imgG;
+    cv::Mat gray;
+	cv::cvtColor(image1, gray, cv::COLOR_BGR2GRAY);
+
+	cvtColor(gray, imgG, cv::COLOR_GRAY2BGR);
+	wshed = wshed*0.5 + imgG*0.5;
+	cv::imshow( "watershed transform", wshed );
     waitKey();
-
 
  return 0;
 }
