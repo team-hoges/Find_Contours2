@@ -54,12 +54,12 @@ int main(int argc, const char* argv[])
     Mat  image1,img2,img3,img4;
     Mat binarys ;
    // Mat labe ;
-    Mat stats;
+    Mat stats,out;
     Mat cen;
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
    // std::vector<Vec4i> hi;
 	//double points_len; //これなに
-	image1 = imread("./ans.jpg");
+	image1 = imread("./ans2.jpg");
     if(image1.empty()==true){
         return -1;
     }
@@ -108,14 +108,16 @@ int main(int argc, const char* argv[])
         }
         
     }
-    
-  
+
     cvtColor(output,output,CV_BGR2GRAY);
     threshold(output,output,20,255,THRESH_BINARY );
-   
+    dilate(output, out, Mat(), Point(-1, -1), 1);
+    //Canny(out, out, out.rows*0.1, out.rows*0.1, 3, false);
+
+    output=out.clone();
     cv::namedWindow("f", cv::WINDOW_AUTOSIZE );
     cv::imshow("f", output);
-   
+    waitKey(); 
     binarys = output;
     //imshow("a",output);
     //waitKey();
@@ -138,8 +140,8 @@ int main(int argc, const char* argv[])
     std::cout << contuors.size()  << std :: endl;
     
     
-    //cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
-  //  cv::imshow("Source", image1);
+    cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
+    cv::imshow("Source", image1);
     waitKey();
     return 0;
 }
