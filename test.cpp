@@ -59,7 +59,7 @@ int main(int argc, const char* argv[])
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
    // std::vector<Vec4i> hi;
 	//double points_len; //これなに
-	image1 = imread("./ans2.jpg");
+	image1 = imread("./ans.jpg");
     if(image1.empty()==true){
         return -1;
     }
