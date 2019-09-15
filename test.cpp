@@ -80,9 +80,7 @@ int main(int argc, const char* argv[])
     img4 = img2.clone();
     img2 = ~img2;
     threshold(img2,img3,1.20,255,THRESH_BINARY_INV );
-    GaussianBlur(img3,img3,Size(3,3),10);
-    threshold(img3,img3,1.5,255,THRESH_BINARY_INV );
-    medianBlur(img3,img3,7);
+   
 
     //int n=connectedComponentsWithStats(img3,img3,stats,cen,4,CV_32S);  
     //ノイズ除去
