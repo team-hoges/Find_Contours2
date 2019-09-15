@@ -78,22 +78,23 @@ int main(int argc, const char* argv[])
     //img4 = image1;
     cvtColor(image1,img2,CV_BGR2GRAY);
     img4 = img2.clone();
-    img2 = ~img2;
-    threshold(img2,img3,1.20,255,THRESH_BINARY_INV );
+    threshold(img4,img3,200,255,THRESH_BINARY_INV );
    
+
 
     //int n=connectedComponentsWithStats(img3,img3,stats,cen,4,CV_32S);  
     //ノイズ除去
     
-  //  imshow("image",img3);
-    //waitKey();
+    imshow("image",img3);
+    waitKey();
     Mat labes = img3.clone() ;//ラベリング対象画像の生成
     Mat find  = img3.clone();
    // Mat labelImaage (labes.size(),CV_32S); //ラベリング用画像の生成
 
     ///ラベリング実行size_
     /*
-    int nlabel = connectedComponents(labes,labelImaage,8); //int nlabelがラベル数になる。
+    int nlabel = conne
+    ctedComponents(labes,labelImaage,8); //int nlabelがラベル数になる。
 
     std::cout << nlabel << std :: endl;
     std::vector<Vec3b>colors_1(nlabel);
@@ -116,13 +117,13 @@ int main(int argc, const char* argv[])
         
     }
     */
-   Mat output (img3.size(),CV_8UC3);//ラベリング結果出力
+   //Mat output (img3.size(),CV_8UC3);//ラベリング結果出力
 
     
    // Mat sabun_bg;//膨張後差分
-    output = img3.clone();
+    //output = img3.clone();
     //cvtColor(img3,output,CV_BGR2GRAY);
-    //threshold(output,output,20,255,THRESH_BINARY );
+  //  threshold(output,output,1,255,THRESH_BINARY );
     //morphologyEx(output, output,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
    //  morphologyEx(output, output,MORPH_DILATE, Mat(), Point(-1, -1), 1);
    
@@ -135,7 +136,7 @@ int main(int argc, const char* argv[])
     //imshow("a",output);
     //waitKey();
 
-    findContours(output,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭検出
+    findContours(img3,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭検出
  
  //輪郭四角表示部
  /*
@@ -156,16 +157,7 @@ int main(int argc, const char* argv[])
 */
 
     std::vector<std::vector<Point> > contours_subset;
-    
-    for (long unsigned int i = 0; i < contuors.size(); i++)//マスク処理
-    {
-        area = contourArea(contuors.at(i));
-        printf("%f\n",area);
-        if(area > 1000){
-            contours_subset.push_back(contuors.at(i));//面積が小さい群を全部消し去って抽出する。
-        }
-    }
-    
+   
     
     Mat mask_data = Mat::zeros(image1.rows, image1.cols, CV_8UC3);
     drawContours(mask_data,contours_subset,-1,Scalar(255,255,255),-1);//ここでマスク処理を行う
