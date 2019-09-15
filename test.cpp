@@ -59,7 +59,7 @@ int main(int argc, const char* argv[])
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
    // std::vector<Vec4i> hi;
 	//double points_len; //これなに
-	image1 = imread("./ans.jpg");
+	image1 = imread("./cbpt0.jpg");
     if(image1.empty()==true){
         return -1;
     }
@@ -111,10 +111,10 @@ int main(int argc, const char* argv[])
 
     cvtColor(output,output,CV_BGR2GRAY);
     threshold(output,output,20,255,THRESH_BINARY );
-    dilate(output, out, Mat(), Point(-1, -1), 1);
+    //dilate(output, out, Mat(), Point(-1, -1), 1);
     //Canny(out, out, out.rows*0.1, out.rows*0.1, 3, false);
 
-    output=out.clone();
+    ///output=out.clone();
     cv::namedWindow("f", cv::WINDOW_AUTOSIZE );
     cv::imshow("f", output);
     waitKey(); 
@@ -125,6 +125,7 @@ int main(int argc, const char* argv[])
     std :: vector <Vec4i> he;
     
     findContours(binarys,contuors,he,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_TC89_L1);
+
     Point MinP;
     Point MaxP;
     for (int i = 0; i < contuors.size(); i++)
@@ -144,4 +145,4 @@ int main(int argc, const char* argv[])
     cv::imshow("Source", image1);
     waitKey();
     return 0;
-}
+  }
