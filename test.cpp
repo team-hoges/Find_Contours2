@@ -66,7 +66,7 @@ int main(int argc, const char* argv[])
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
    // std::vector<Vec4i> hi;
 	//double points_len; //これなに
-	image1 = imread("./ans2.jpg");
+	image1 = imread("./ans.jpg");
     Mat back_up = image1.clone();
     if(image1.empty()==true){
         return -1;
@@ -171,9 +171,7 @@ int main(int argc, const char* argv[])
     
     Mat mask_data = Mat::zeros(image1.rows, image1.cols, CV_8UC3);
     drawContours(mask_data,contours_subset,-1,Scalar(255,255,255),-1);//ここでマスク処理を行う
-  /////////////////////////////////////////////////////////////////////////
-  ^\////////////////////////
-    
+
     //cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
     cv::imshow("mask_data", mask_data);//これを使う
     waitKey();
@@ -181,7 +179,7 @@ int main(int argc, const char* argv[])
     Mat sure_bg;
     Mat kernel(3, 3, CV_8U, cv::Scalar(1));
     
-    morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
+ //   morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
     dilate(mask_data,sure_bg,kernel,Point(-1,-1),2);//背景領域の抽出
     
     //namedWindow("f", WINDOW_AUTOSIZE );
