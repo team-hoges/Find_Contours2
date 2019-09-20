@@ -168,16 +168,22 @@ int main(int argc, const char* argv[])
         }
     }
     
-    
+    Mat kernel(3, 3, CV_8U, cv::Scalar(1));
+
     Mat mask_data = Mat::zeros(image1.rows, image1.cols, CV_8UC3);
     drawContours(mask_data,contours_subset,-1,Scalar(255,255,255),-1);//ここでマスク処理を行う
 
-    //cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
+    
+//    erode(mask_data,mask_data,kernel,Point(-1,-1),3);
+
+    
+    
+    
+    cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
     cv::imshow("mask_data", mask_data);//これを使う
     waitKey();
     
     Mat sure_bg;
-    Mat kernel(3, 3, CV_8U, cv::Scalar(1));
     
  //   morphologyEx(mask_data, sure_bg,MORPH_CLOSE, Mat(), Point(-1, -1), 1);
     dilate(mask_data,sure_bg,kernel,Point(-1,-1),2);//背景領域の抽出
@@ -294,6 +300,7 @@ int main(int argc, const char* argv[])
 
 	cv::Mat imgG;
     cv::Mat gray;
+    
 	cv::cvtColor(image1, gray, cv::COLOR_BGR2GRAY);
 
 	cvtColor(gray, imgG, cv::COLOR_GRAY2BGR);
