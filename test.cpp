@@ -64,11 +64,12 @@ int main(int argc, const char* argv[])
     double maxVal=0;
     double area=0;//塗りつぶし範囲卍
     std::vector<std::vector<Point>>imgs_points;//輪郭座標系二次元配列
-   // std::vector<Vec4i> hi;
+   // std::vector<Vec4i> hi;	image1 = imread("./ans.jpg");
+
 	//double points_len; //これなに
-	image1 = imread("./ans.jpg");
     Mat back_up = image1.clone();
     if(image1.empty()==true){
+        printf("画像を取り込めません\n");
         return -1;
     }
 
@@ -176,9 +177,6 @@ int main(int argc, const char* argv[])
     
 //    erode(mask_data,mask_data,kernel,Point(-1,-1),3);
 
-    
-    
-    
     cv::namedWindow("Source", cv::WINDOW_AUTOSIZE );
     cv::imshow("mask_data", mask_data);//これを使う
     waitKey();
@@ -209,8 +207,7 @@ int main(int argc, const char* argv[])
     Mat surefg;
     double f1,f2;
 
-    
-	cv::Point minLoc, maxLoc;
+    cv::Point minLoc, maxLoc;
     
 	minMaxLoc(dist_transform, &minVal, &maxVal, &minLoc, &maxLoc);
 	threshold(dist_transform, surefg, 0.00001*maxVal, 255, 0);
@@ -275,6 +272,7 @@ int main(int argc, const char* argv[])
 
     cv::Mat wshed(Marker.size(), CV_8UC3);
 	std::vector<cv::Vec3b> colorTab;
+
 	for(int i = 0; i < comp; i++ )
 	{
 		int b = cv::theRNG().uniform(0, 255);
@@ -300,8 +298,8 @@ int main(int argc, const char* argv[])
 
 	cv::Mat imgG;
     cv::Mat gray;
-    
-	cv::cvtColor(image1, gray, cv::COLOR_BGR2GRAY);
+
+	cvtColor(image1, gray, cv::COLOR_BGR2GRAY);
 
 	cvtColor(gray, imgG, cv::COLOR_GRAY2BGR);
 	wshed = wshed*0.5 + imgG*0.5;
