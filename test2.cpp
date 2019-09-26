@@ -54,7 +54,7 @@ findContours(img3,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭�
 
 
 for ( i = 0,t=0; i < contuors.size(); i++){
-   if(100 < contourArea(contuors.at(i))){
+   if(300 < contourArea(contuors.at(i))){
        t++;
        cout << contourArea(contuors.at(i)) << endl;
        contour_list.push_back(contuors.at(i));
