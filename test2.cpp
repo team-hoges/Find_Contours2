@@ -23,7 +23,7 @@ using namespace std;
 int main(){
 Mat  image1,img2,img3,img4;
 Mat  Contour_out;
-int i=0;
+int i=0,t=0;
 int  Contuor_lens[10000];
 Vec3b Contuor_Colors[99][9999];
 image1 = imread("./ans.jpg");
@@ -53,20 +53,20 @@ findContours(img3,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭�
 
 
 
-for ( i = 0; i < contuors.size(); i++){
+for ( i = 0,t=0; i < contuors.size(); i++){
    if(100 < contourArea(contuors.at(i))){
-       Contuor_lens[i]=i;
+       t++;
        cout << contourArea(contuors.at(i)) << endl;
        contour_list.push_back(contuors.at(i));
    }
 }
 
-for (auto contour_size = Contour_out.begin(); contour_size != Contour_out.end(); contour_size++)
-{
-    
+
+cout << "test" << i << endl;
+
+for (auto contour = contour_list.begin(); contour != contour_list.end(); contour++){
+    cv::polylines(Contour_out, contour_list, true, cv::Scalar(0, 255, 0), 2);
 }
-
-
 
 imshow("out",Contour_out);
 waitKey();
