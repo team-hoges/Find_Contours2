@@ -61,8 +61,10 @@ for ( i = 0; i < contuors.size(); i++){
    }
 }
 
-
-drawContours(Contuor_Colors,image1,contour_list,-1,Scalar(0,255,0),2);
+for (auto contour_size = Contour_out.begin(); contour_size != Contour_out.end(); contour_size++)
+{
+    
+}
 
 
 
