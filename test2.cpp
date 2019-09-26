@@ -46,10 +46,10 @@ medianBlur(img3,img3,7);
 //ノイズ除去
 
 Mat output (img3.size(),CV_8UC3);
-std :: vector<std::vector<Point>> contuors;
-std :: vector<std ::vector<Point>> contour_list;
-std :: vector <Vec4i> he;
-std :: vector<std::vector<Vec3b>> Contour_Colors; 
+std :: vector<std::vector<Point>> contuors;//初期輪郭
+std :: vector<std ::vector<Point>> contour_list;//選別済み輪郭
+std :: vector <Vec4i> he;//色情報
+std :: vector<std::vector<Vec3b>> Contour_Colors;　 
 cvtColor(img3,img3,CV_BGR2GRAY);
 findContours(img3,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭検出
 
@@ -75,7 +75,7 @@ for ( i = 0; i < contour_list.size(); i++)
 {
     for ( t = 0; t < contour_list[i].size(); t++)
     {
-        Contour_Colors[i][t]  = image1( contour_list[i][t] .dot());
+        Contour_Colors[i][t]  =　P
     }
     
 }
