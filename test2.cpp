@@ -46,6 +46,7 @@ medianBlur(img3,img3,7);
 
 Mat output (img3.size(),CV_8UC3);
 std :: vector<std::vector<Point>> contuors;
+std :: vector<std ::vector<Point>> contour_list;
 std :: vector <Vec4i> he;
 cvtColor(img3,img3,CV_BGR2GRAY);
 findContours(img3,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭検出
@@ -53,19 +54,20 @@ findContours(img3,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭�
 
 
 for ( i = 0; i < contuors.size(); i++){
-   if(100 < contourArea(contuors.at(i)){
+   if(100 < contourArea(contuors.at(i))){
        Contuor_lens[i]=i;
        cout << contourArea(contuors.at(i)) << endl;
+       contour_list.push_back(contuors.at(i));
    }
 }
 
 
+drawContours(Contuor_Colors,image1,contour_list,-1,Scalar(0,255,0),2);
 
 
 
-
-
-
+imshow("out",Contour_out);
+waitKey();
 
 
  return -1;
