@@ -25,9 +25,10 @@ Mat  image1,img2,img3,img4;
 Mat  Contour_out;
 int i=0,t=0;
 int  Contuor_lens[10000];
-Vec3b Contuor_Colors[99][9999];
+//Vec3b Contuor_Colors;
 image1 = imread("./ans.jpg");
 Contour_out=image1.clone();
+
 if(image1.empty()==true){
     printf("画像を取り込めません\n");
     return -1;
@@ -48,6 +49,7 @@ Mat output (img3.size(),CV_8UC3);
 std :: vector<std::vector<Point>> contuors;
 std :: vector<std ::vector<Point>> contour_list;
 std :: vector <Vec4i> he;
+std :: vector<std::vector<Vec3b>> Contour_Colors; 
 cvtColor(img3,img3,CV_BGR2GRAY);
 findContours(img3,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭検出
 
@@ -68,10 +70,22 @@ for (auto contour = contour_list.begin(); contour != contour_list.end(); contour
     cv::polylines(Contour_out, contour_list, true, cv::Scalar(0, 255, 0), 2);
 }
 
+
+for ( i = 0; i < contour_list.size(); i++)
+{
+    for ( t = 0; t < contour_list[i].size(); t++)
+    {
+        Contour_Colors[i][t]  = image1( contour_list[i][t] .dot());
+    }
+    
+}
+
+
+
+
+
 imshow("out",Contour_out);
 waitKey();
-
-
 
 
 
