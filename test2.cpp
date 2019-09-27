@@ -35,7 +35,7 @@ if(image1.empty()==true){
 }
 
 img2 = ~image1.clone();
-
+Mat3b image_color = image1.clone(); 
 imshow("main",image1);
 waitKey();
 
@@ -46,12 +46,13 @@ medianBlur(img3,img3,7);
 //ノイズ除去
 
 Mat output (img3.size(),CV_8UC3);
-std :: vector<std::vector<Point>> contuors;//初期輪郭
-std :: vector<std ::vector<Point>> contour_list;//選別済み輪郭
-std :: vector <Vec4i> he;//色情報
-std :: vector<std::vector<Vec3b>> Contour_Colors;　 
+vector<vector<Point>> contuors;//初期輪郭
+vector<vector<Point>> contour_list;//選別済み輪郭
+vector <Vec4i> he;//色情報
+vector<vector<Vec3b>> Contour_Colors;
+
 cvtColor(img3,img3,CV_BGR2GRAY);
-findContours(img3,contuors,he,CV_RETR_EXTERNAL ,CV_CHAIN_APPROX_NONE);//輪郭検出
+findContours(img3,contuors,he,CV_RETR_TREE  ,CV_CHAIN_APPROX_NONE);//輪郭検出
 
 
 
@@ -64,31 +65,37 @@ for ( i = 0,t=0; i < contuors.size(); i++){
 }
 
 
-cout << "test" << i << endl;
+cout << contour_list.size()  << endl;
 
 for (auto contour = contour_list.begin(); contour != contour_list.end(); contour++){
     cv::polylines(Contour_out, contour_list, true, cv::Scalar(0, 255, 0), 2);
 }
 
 
-for ( i = 0; i < contour_list.size(); i++)
-{
-    for ( t = 0; t < contour_list[i].size(); t++)
-    {
-        Contour_Colors[i][t]  =　P
-    }
+
+Contour_Colors.resize(contour_list.size());
+for ( i = 0; i < contour_list.size(); i++){
     
+   for ( t = 0; t < contour_list[i].size(); t++)
+    {
+      Contour_Colors[i].push_back(image_color(contour_list[i][t]));
+    }
 }
-
-
-
-
-
 imshow("out",Contour_out);
 waitKey();
 
 
 
 
- return -1;
+     for ( t = 0; t < Contour_Colors[1].size(); t++)
+   
+     {
+         cout << Contour_Colors[1][t] << endl;
+     }
+     
+ 
+ 
+
+
+ return 0;
 }
