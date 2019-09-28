@@ -12,6 +12,8 @@
 #include <string>
 #include<random>
 #include<strstream>
+#include <fstream>
+
 
 #define max_size 100
 
@@ -26,6 +28,7 @@ Mat  Contour_out,Contour_out2;
 int count=0;
 int i=0,t=0;
 int  Contuor_lens[10000];
+random_device rng;     // 非決定的な乱数生成器
 
 Mat output (img3.size(),CV_8UC3);
 vector<vector<Point>> contuors;//初期輪郭
@@ -33,8 +36,9 @@ vector<vector<Point>> contour_list;//選別済み輪郭
 vector <Vec4i> he;
 vector <Vec4i>he_list;
 vector<vector<Vec3b>> Contour_Colors;
-
-
+random_device seed_gen;
+default_random_engine engine(seed_gen());
+std::uniform_int_distribution<> dist(0, 255);
 image1 = imread("./ans.jpg");
 Contour_out=image1.clone();
 Contour_out2 = image1.clone();
@@ -56,7 +60,7 @@ medianBlur(img3,img3,7);
 
 
 cvtColor(img3,img3,CV_BGR2GRAY);
-findContours(img3,contuors,he,CV_RETR_CCOMP  ,CV_CHAIN_APPROX_NONE);//輪郭検出
+findContours(img3,contuors,he,CV_RETR_TREE  ,CV_CHAIN_APPROX_NONE);//輪郭検出
 
 
 
@@ -89,20 +93,16 @@ waitKey();
 
 
 for ( t = 0; t < Contour_Colors[1].size(); t++){
-         cout << Contour_Colors[1][t] << endl;
+ //        cout << Contour_Colors[1][t] << endl;
      }
      
+  for( int i = 0; i< contour_list.size(); i++ )
+     {
+       Scalar color = Scalar( 0, dist(engine), dist(engine) );
+       
+       drawContours( Contour_out2, contour_list, i, color, 2, 8, he_list , 0, Point() );
+     }
 
-
- for ( i = 0; i < contour_list.size(); i=he_list[i][0])
- {
-    Rect rs = boundingRect(contour_list[i]);
-
-    if(he_list[i][2] != -1  ){
-            rectangle(Contour_out2,Point(rs.x,rs.y),Point(rs.x+rs.width,rs.y+rs.width),Scalar(0,0,255),3,8,0);
-    }
-    count++;
- }
 
 
 cout << "Num Contours "  << i << "\n" << endl;
