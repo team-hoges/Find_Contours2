@@ -100,7 +100,7 @@ for ( t = 0; t < Contour_Colors[1].size(); t++){
      {
        Scalar color = Scalar( 0, dist(engine), dist(engine) );
        
-       drawContours( Contour_out2, contour_list, i, color, 2, 8, he_list , 0, Point() );
+       drawContours( Contour_out2, contour_list, i, color, 2, 8, he_list, 0, Point() );
      }
 
 
