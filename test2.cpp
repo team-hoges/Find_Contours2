@@ -127,6 +127,8 @@ for ( i = 0; i < contour_list.size(); i++){
       Contour_Colors[i].push_back(image_color(contour_list[i][t]));
     }
 }
+
+
 imshow("out",Contour_out);
 waitKey();
 
