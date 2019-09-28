@@ -65,7 +65,7 @@ findContours(img3,contuors,he,CV_RETR_TREE  ,CV_CHAIN_APPROX_NONE);//輪郭検�
 
 
 for ( i = 0,t=0; i < contuors.size(); i++){
-   if(300 < contourArea(contuors.at(i))){
+   if(2000 < contourArea(contuors.at(i)) && he[i][3] != -1      ){
        t++;
        cout << contourArea(contuors.at(i)) << endl;
        contour_list.push_back(contuors.at(i));
@@ -95,20 +95,11 @@ waitKey();
 for ( t = 0; t < Contour_Colors[1].size(); t++){
  //        cout << Contour_Colors[1][t] << endl;
      }
-     
-  for( int i = 0; i< contour_list.size(); i++ )
-     {
-       Scalar color = Scalar( 0, dist(engine), dist(engine) );
-       
-       drawContours( Contour_out2, contour_list, i, color, 2, 8, he_list, 0, Point() );
-     }
-
-
 
 cout << "Num Contours "  << i << "\n" << endl;
 
- imshow("output",Contour_out2);
- waitKey();
+// imshow("output",Contour_out2);
+ //waitKey();
 
 return 0;
 }

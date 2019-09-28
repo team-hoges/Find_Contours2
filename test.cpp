@@ -289,6 +289,7 @@ int main(int argc, const char* argv[])
 			int index = Marker.at<int>(i,j);
 			if( index == -1 )
 				wshed.at<cv::Vec3b>(i,j) = cv::Vec3b(255,255,255);
+                
 			else if( index <= 0 || index > comp )
 				wshed.at<cv::Vec3b>(i,j) = cv::Vec3b(0,0,0);
 			else
