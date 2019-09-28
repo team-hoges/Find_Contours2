@@ -67,6 +67,8 @@ int i=0,t=0;
 int  Contuor_lens[10000];
 random_device rng;     // 非決定的な乱数生成器
 
+Mat outputs[10];//テスト
+
 Mat output (img3.size(),CV_8UC3);
 vector<vector<Point>> contuors;//初期輪郭
 vector<vector<Point>> contour_list;//選別済み輪郭
@@ -76,7 +78,7 @@ vector<vector<Vec3b>> Contour_Colors;
 random_device seed_gen;
 default_random_engine engine(seed_gen());
 std::uniform_int_distribution<> dist(0, 255);
-image1 = imread("./ans.jpg");
+image1 = imread("./ans2.jpg");
 Contour_out=image1.clone();
 Contour_out2 = image1.clone();
 Rect_output = image1.clone();
@@ -95,7 +97,9 @@ GaussianBlur(img3,img3,Size(3,3),10);
 threshold(img3,img3,1.5,255,THRESH_BINARY_INV );
 medianBlur(img3,img3,7);
 //ノイズ除去
-
+ 
+ imshow("test",img3);
+ waitKey();
 
 cvtColor(img3,img3,CV_BGR2GRAY);
 findContours(img3,contuors,he,CV_RETR_TREE  ,CV_CHAIN_APPROX_NONE);//輪郭検出
@@ -126,13 +130,14 @@ for ( i = 0; i < contour_list.size(); i++){
 imshow("out",Contour_out);
 waitKey();
 
-
-for ( t = 0; t < Contour_list.size(); t++){
-    Point minP = min(contour_list.at(i) );
-    Point maxP = max(contour_list.at(i) );
+for ( t = 0; t < contour_list.size(); t++){
+    Point minP = min(contour_list.at(t) );
+    Point maxP = max(contour_list.at(t) );
     Rect rect(minP, maxP);
-  //矩形を描く
-  cv::rectangle(Rect_output, rect, cv::Scalar(0, 255, 0), 2, 8);
+   rectangle(Rect_output, rect, cv::Scalar(0, 255, 0), 2, 8);
+   outputs[t] = image1(rect);
+  imshow("2",outputs[t]);
+  waitKey();
 }
 
 cout << "Num Contours "  << i << "\n" << endl;
