@@ -21,10 +21,47 @@ using namespace cv;
 using namespace std;
 
 
+Point max(std::vector<Point> P){
+    double max_x = P.at(0).x;
+    double max_y = P.at(0).y;
+
+    for (size_t i = 0; i < P.size(); i++)
+    {
+        if(max_x < P.at(i).x){
+            max_x=P.at(i).x;
+        }
+
+        if(max_y < P.at(i).y){
+            max_y=P.at(i).y;
+        }
+    }
+    return Point(max_x,max_y);
+}
+
+Point min(std::vector<Point> P){
+    double min_x = P.at(0).x;
+    double min_y = P.at(0).y;
+
+    for (size_t i = 0; i < P.size(); i++)
+    {
+        if(min_x > P.at(i).x){
+            min_x=P.at(i).x;
+        }
+
+        if(min_y > P.at(i).y){
+            min_y=P.at(i).y;
+        }
+    }
+    return Point(min_x,min_y);
+}
+
+
+
 
 int main(){
 Mat  image1,img2,img3,img4;
 Mat  Contour_out,Contour_out2;
+Mat Rect_output;
 int count=0;
 int i=0,t=0;
 int  Contuor_lens[10000];
@@ -42,6 +79,7 @@ std::uniform_int_distribution<> dist(0, 255);
 image1 = imread("./ans.jpg");
 Contour_out=image1.clone();
 Contour_out2 = image1.clone();
+Rect_output = image1.clone();
 if(image1.empty()==true){
     printf("画像を取り込めません\n");
     return -1;
@@ -72,10 +110,7 @@ for ( i = 0,t=0; i < contuors.size(); i++){
        he_list.push_back(he.at(i));
    }
 }
-
-
 cout << he_list.size()  << endl;
-
 for (auto contour = contour_list.begin(); contour != contour_list.end(); contour++){
     cv::polylines(Contour_out, contour_list, true, cv::Scalar(0, 255, 0), 2);
 }
@@ -92,14 +127,18 @@ imshow("out",Contour_out);
 waitKey();
 
 
-for ( t = 0; t < Contour_Colors[1].size(); t++){
- //        cout << Contour_Colors[1][t] << endl;
-     }
+for ( t = 0; t < Contour_list.size(); t++){
+    Point minP = min(contour_list.at(i) );
+    Point maxP = max(contour_list.at(i) );
+    Rect rect(minP, maxP);
+  //矩形を描く
+  cv::rectangle(Rect_output, rect, cv::Scalar(0, 255, 0), 2, 8);
+}
 
 cout << "Num Contours "  << i << "\n" << endl;
 
-// imshow("output",Contour_out2);
- //waitKey();
+ imshow("output",Rect_output);
+ waitKey();
 
 return 0;
 }
