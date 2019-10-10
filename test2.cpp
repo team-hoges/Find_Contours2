@@ -78,7 +78,7 @@ vector<vector<Vec3b>> Contour_Colors;
 random_device seed_gen;
 default_random_engine engine(seed_gen());
 std::uniform_int_distribution<> dist(0, 255);
-image1 = imread("./ans2.jpg");
+image1 = imread("./ans.jpg");
 Contour_out=image1.clone();
 Contour_out2 = image1.clone();
 Rect_output = image1.clone();
@@ -104,8 +104,6 @@ medianBlur(img3,img3,7);
 cvtColor(img3,img3,CV_BGR2GRAY);
 findContours(img3,contuors,he,CV_RETR_TREE  ,CV_CHAIN_APPROX_NONE);//輪郭検出
 
-
-
 for ( i = 0,t=0; i < contuors.size(); i++){
    if(2000 < contourArea(contuors.at(i)) && he[i][3] != -1      ){
        t++;
@@ -114,7 +112,9 @@ for ( i = 0,t=0; i < contuors.size(); i++){
        he_list.push_back(he.at(i));
    }
 }
+
 cout << he_list.size()  << endl;
+
 for (auto contour = contour_list.begin(); contour != contour_list.end(); contour++){
     cv::polylines(Contour_out, contour_list, true, cv::Scalar(0, 255, 0), 2);
 }
@@ -128,6 +128,14 @@ for ( i = 0; i < contour_list.size(); i++){
     }
 }
 
+
+for( i = 0 ; i < Contour_Colors.size();i++)
+{   
+    for ( t = 0; t< Contour_Colors[i].size(); t++)
+    {
+        //cout << Contour_Colors[i][t] << endl;  
+    }
+}
 
 imshow("out",Contour_out);
 waitKey();
